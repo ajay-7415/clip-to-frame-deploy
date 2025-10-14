@@ -540,6 +540,13 @@ export default function ImageFrameClipper() {
         x: img.x() + dx,
         y: img.y() + dy
       });
+      
+      // Update the overlay manually
+      const frameData = selectedFrame.frameData;
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.position(img.position());
+      }
+      
       layerRef.current.draw();
     }
   };
