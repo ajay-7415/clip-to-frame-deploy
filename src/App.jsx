@@ -358,6 +358,13 @@ export default function ImageFrameClipper() {
       const direction = currentScaleX < 0 ? -1 : 1;
       img.scaleX(scale * direction);
       img.scaleY(scale);
+      
+      // Update the overlay manually
+      const frameData = selectedFrame.frameData;
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.scale(img.scale());
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -367,6 +374,13 @@ export default function ImageFrameClipper() {
     setRotateValue(rotation);
     if (selectedFrame && selectedFrame.frameData.imageNode) {
       selectedFrame.frameData.imageNode.rotation(rotation);
+      
+      // Update the overlay manually
+      const frameData = selectedFrame.frameData;
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.rotation(rotation);
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -377,6 +391,13 @@ export default function ImageFrameClipper() {
       const newFlipH = !flipH;
       setFlipH(newFlipH);
       img.scaleX(scaleValue * (newFlipH ? -1 : 1));
+      
+      // Update overlay
+      const frameData = selectedFrame.frameData;
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.scaleX(img.scaleX());
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -387,6 +408,13 @@ export default function ImageFrameClipper() {
       const newFlipV = !flipV;
       setFlipV(newFlipV);
       img.scaleY(scaleValue * (newFlipV ? -1 : 1));
+      
+      // Update overlay
+      const frameData = selectedFrame.frameData;
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.scaleY(img.scaleY());
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -408,6 +436,14 @@ export default function ImageFrameClipper() {
       });
       img.rotation(0);
       img.offset({ x: 0, y: 0 });
+      
+      // Update overlay
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.scale(img.scale());
+        frameData.transparentOverlay.clippedImage.position(img.position());
+        frameData.transparentOverlay.clippedImage.rotation(0);
+        frameData.transparentOverlay.clippedImage.offset({ x: 0, y: 0 });
+      }
       
       setScaleValue(scale);
       setRotateValue(0);
@@ -434,6 +470,14 @@ export default function ImageFrameClipper() {
       img.rotation(0);
       img.offset({ x: 0, y: 0 });
       
+      // Update overlay
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.scale(img.scale());
+        frameData.transparentOverlay.clippedImage.position(img.position());
+        frameData.transparentOverlay.clippedImage.rotation(0);
+        frameData.transparentOverlay.clippedImage.offset({ x: 0, y: 0 });
+      }
+      
       setScaleValue(scale);
       setRotateValue(0);
       setStatusText('✅ Image filled frame!');
@@ -451,6 +495,14 @@ export default function ImageFrameClipper() {
       frameData.imageNode.rotation(0);
       frameData.imageNode.offset({ x: 0, y: 0 });
       
+      // Update overlay
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.scale({ x: original.scale, y: original.scale });
+        frameData.transparentOverlay.clippedImage.position({ x: original.x, y: original.y });
+        frameData.transparentOverlay.clippedImage.rotation(0);
+        frameData.transparentOverlay.clippedImage.offset({ x: 0, y: 0 });
+      }
+      
       setScaleValue(original.scale);
       setRotateValue(0);
       setFlipH(false);
@@ -464,6 +516,13 @@ export default function ImageFrameClipper() {
       const img = selectedFrame.frameData.imageNode;
       const currentY = img.y();
       img.position({ x: 0, y: currentY });
+      
+      // Update overlay
+      const frameData = selectedFrame.frameData;
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.position(img.position());
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -478,6 +537,12 @@ export default function ImageFrameClipper() {
         x: (frameData.width - imgWidth) / 2,
         y: currentY 
       });
+      
+      // Update overlay
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.position(img.position());
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -492,6 +557,12 @@ export default function ImageFrameClipper() {
         x: frameData.width - imgWidth,
         y: currentY 
       });
+      
+      // Update overlay
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.position(img.position());
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -501,6 +572,13 @@ export default function ImageFrameClipper() {
       const img = selectedFrame.frameData.imageNode;
       const currentX = img.x();
       img.position({ x: currentX, y: 0 });
+      
+      // Update overlay
+      const frameData = selectedFrame.frameData;
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.position(img.position());
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -515,6 +593,12 @@ export default function ImageFrameClipper() {
         x: currentX,
         y: (frameData.height - imgHeight) / 2
       });
+      
+      // Update overlay
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.position(img.position());
+      }
+      
       layerRef.current.draw();
     }
   };
@@ -529,6 +613,12 @@ export default function ImageFrameClipper() {
         x: currentX,
         y: frameData.height - imgHeight
       });
+      
+      // Update overlay
+      if (frameData.transparentOverlay && frameData.transparentOverlay.clippedImage) {
+        frameData.transparentOverlay.clippedImage.position(img.position());
+      }
+      
       layerRef.current.draw();
     }
   };
