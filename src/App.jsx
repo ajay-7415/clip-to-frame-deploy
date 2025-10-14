@@ -243,13 +243,23 @@ export default function ImageFrameClipper() {
       frameData.imageNode.destroy();
     }
 
+    // Remove any existing overlay first
+    removeTransparentOverlay(selectedFrame);
+
+    // Calculate scale to fit the image to frame
+    const scaleX = frameData.width / imageObj.width;
+    const scaleY = frameData.height / imageObj.height;
+    const scale = Math.min(scaleX, scaleY);
+
     const konvaImage = new Konva.Image({
       image: imageObj,
       draggable: true,
-      width: frameData.width,
-      height: frameData.height,
-      x: 0,
-      y: 0,
+      width: imageObj.width,
+      height: imageObj.height,
+      scaleX: scale,
+      scaleY: scale,
+      x: (frameData.width - imageObj.width * scale) / 2,
+      y: (frameData.height - imageObj.height * scale) / 2,
       name: 'movableImage',
       listening: true,
       opacity: 1
@@ -260,9 +270,9 @@ export default function ImageFrameClipper() {
     frameData.originalImageData = {
       width: imageObj.width,
       height: imageObj.height,
-      scale: 1,
-      x: 0,
-      y: 0
+      scale: scale,
+      x: (frameData.width - imageObj.width * scale) / 2,
+      y: (frameData.height - imageObj.height * scale) / 2
     };
 
     // Click on image to select it
@@ -302,26 +312,23 @@ export default function ImageFrameClipper() {
     frameData.clipGroup.moveToTop();
     selectedFrame.draggable(false);
     
-    setScaleValue(1);
+    setScaleValue(scale);
     setRotateValue(0);
     setFlipH(false);
     setFlipV(false);
     setIsClipped(false);
     frameData.isClipped = false;
     setShowImageControls(true);
-    setStatusText('✅ Image loaded! Now fitting to frame...');
+    setStatusText('✅ Image loaded and fitted to frame!');
     setStatusType('editing');
     
     transformerRef.current.nodes([konvaImage]);
     transformerRef.current.moveToTop();
     
-    // Add transparent overlay when image is loaded (during adjustment time)
-    addTransparentOverlay(selectedFrame);
-    
-    // Auto fit image to frame
+    // Add transparent overlay after image is loaded
     setTimeout(() => {
-      handleFitImage();
-    }, 100);
+      addTransparentOverlay(selectedFrame);
+    }, 50);
     
     layerRef.current.draw();
   };
